@@ -1,0 +1,288 @@
+openapi: 3.0.3
+info:
+  title: OfflinePay API
+  description: API specification for OfflinePay, an offline-first payment intent and proximity relay platform.
+  version: 1.0.0
+paths:
+  /api/identity/devices:
+    post:
+      summary: Register a device identity
+      operationId: registerDevice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device_id
+                - owner_id
+                - public_key
+              properties:
+                device_id:
+                  type: string
+                owner_id:
+                  type: string
+                public_key:
+                  type: string
+                  description: PEM-encoded ECDSA P-256 public key.
+      responses:
+        '200':
+          description: Device successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid request body.
+
+  /api/identity/devices/{id}:
+    get:
+      summary: Look up a device identity
+      operationId: lookupDevice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Device found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Device not found.
+
+  /api/identity/devices/{id}/revoke:
+    post:
+      summary: Revoke a device key
+      operationId: revokeDevice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                compromised:
+                  type: boolean
+      responses:
+        '200':
+          description: Device successfully revoked.
+
+  /api/tokens/issue:
+    post:
+      summary: Issue a bank-signed offline spending token
+      operationId: issueToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - owner_id
+                - value
+                - duration_seconds
+              properties:
+                owner_id:
+                  type: string
+                value:
+                  type: integer
+                  description: Value of the token in cents.
+                duration_seconds:
+                  type: integer
+                  description: Duration until token expires.
+      responses:
+        '200':
+          description: Token issued successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfflineToken'
+        '400':
+          description: Insufficient funds or invalid parameters.
+
+  /api/intents/create:
+    post:
+      summary: Simulates offline creation of signed/encrypted payment intent
+      operationId: createIntent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sender_id
+                - receiver_id
+                - amount
+                - currency
+                - device_id
+                - token_id
+                - device_private_key_pem
+                - bank_public_key_pem
+                - duration_seconds
+              properties:
+                sender_id:
+                  type: string
+                receiver_id:
+                  type: string
+                amount:
+                  type: integer
+                currency:
+                  type: string
+                device_id:
+                  type: string
+                token_id:
+                  type: string
+                device_private_key_pem:
+                  type: string
+                bank_public_key_pem:
+                  type: string
+                duration_seconds:
+                  type: integer
+      responses:
+        '200':
+          description: Envelope successfully built.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  envelope:
+                    $ref: '#/components/schemas/EncryptedEnvelope'
+                  payload:
+                    type: object
+
+  /api/relays/packet:
+    post:
+      summary: Submit a packet to an untrusted relay node
+      operationId: relayPacket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - envelope
+              properties:
+                envelope:
+                  $ref: '#/components/schemas/EncryptedEnvelope'
+                hop_count:
+                  type: integer
+      responses:
+        '222':
+          description: Packet accepted and placed in relay queue.
+        '400':
+          description: Duplicate envelope detected or invalid format.
+
+  /api/settlement/settle:
+    post:
+      summary: Submit envelope directly to Bank Settlement
+      operationId: settle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - envelope
+              properties:
+                envelope:
+                  $ref: '#/components/schemas/EncryptedEnvelope'
+                hop_count:
+                  type: integer
+      responses:
+        '200':
+          description: Transaction settled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: SETTLED
+        '422':
+          description: Validation failure, double spend, or replay detected.
+
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        device_id:
+          type: string
+        owner_id:
+          type: string
+        public_key:
+          type: string
+        trust_score:
+          type: number
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED, COMPROMISED]
+        created_at:
+          type: string
+          format: date-time
+        revoked_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    OfflineToken:
+      type: object
+      properties:
+        token_id:
+          type: string
+        owner_id:
+          type: string
+        value:
+          type: integer
+        expiry:
+          type: string
+          format: date-time
+        consumed:
+          type: boolean
+        consumed_at:
+          type: string
+          format: date-time
+          nullable: true
+        token_signature:
+          type: string
+        reserved_at:
+          type: string
+          format: date-time
+        released_at:
+          type: string
+          format: date-time
+          nullable: true
+        risk_score_at_issue:
+          type: number
+
+    EncryptedEnvelope:
+      type: object
+      properties:
+        ephemeral_public_key:
+          type: string
+        ciphertext:
+          type: string
+        nonce:
+          type: string
+        auth_tag:
+          type: string
+        txn_id:
+          type: string
+        iv:
+          type: string

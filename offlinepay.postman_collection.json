@@ -1,0 +1,474 @@
+{
+	"info": {
+		"_postman_id": "c62fb4bf-42bb-4c28-98e6-7b83f069ba54",
+		"name": "OfflinePay API Collection",
+		"description": "Standardized REST API collection for testing OfflinePay v1 endpoints, including health checks, attestation, offline spending tokens, and distributed settlement cluster control.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "System Health",
+			"item": [
+				{
+					"name": "Liveness check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/live",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"live"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Readiness check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ready",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ready"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Identity & Devices",
+			"item": [
+				{
+					"name": "Register Device",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"device_id\": \"dev-alice-phone\",\n    \"owner_id\": \"user-alice\",\n    \"public_key\": \"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9ZxPuGoekx6mkq8bg9so8CfQT6ac\\nBF6iyy2GtXi//X0UEid4pWgs0Pvsi0KUHgKnEcKbd1rI1Lg8/UOKZDPrIg==\\n-----END PUBLIC KEY-----\\n\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/identity/devices",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"identity",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lookup Device",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/identity/devices/dev-alice-phone",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"identity",
+								"devices",
+								"dev-alice-phone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke Device",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"compromised\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/identity/devices/dev-alice-phone/revoke",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"identity",
+								"devices",
+								"dev-alice-phone",
+								"revoke"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Offline Tokens",
+			"item": [
+				{
+					"name": "Issue Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"owner_id\": \"user-alice\",\n    \"value\": 5000,\n    \"duration_seconds\": 3600\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tokens/issue",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens",
+								"issue"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Intents & Settlement",
+			"item": [
+				{
+					"name": "Create Offline Intent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sender_id\": \"user-alice\",\n    \"receiver_id\": \"merchant-charlie\",\n    \"amount\": 3500,\n    \"currency\": \"USD\",\n    \"device_id\": \"dev-alice-phone\",\n    \"token_id\": \"token-alice-50\",\n    \"device_private_key_pem\": \"-----BEGIN EC PRIVATE KEY-----\\nMHcCAQEEIEO9xf9kYFvIjupGyQQXi3/RH7bfVtjc3b/0jG9jrnpJoAoGCCqGSM49\\nAwEHoUQDQgAE9ZxPuGoekx6mkq8bg9so8CfQT6acBF6iyy2GtXi//X0UEid4pWgs\\n0Pvsi0KUHgKnEcKbd1rI1Lg8/UOKZDPrIg==\\n-----END EC PRIVATE KEY-----\\n\",\n    \"bank_public_key_pem\": \"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9ZxPuGoekx6mkq8bg9so8CfQT6ac\\nBF6iyy2GtXi//X0UEid4pWgs0Pvsi0KUHgKnEcKbd1rI1Lg8/UOKZDPrIg==\\n-----END PUBLIC KEY-----\\n\",\n    \"duration_seconds\": 300\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/intents/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"intents",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Relay Packet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"envelope\": {\n        \"ephemeral_public_key\": \"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9ZxPuGoekx6mkq8bg9so8CfQT6ac\\nBF6iyy2GtXi//X0UEid4pWgs0Pvsi0KUHgKnEcKbd1rI1Lg8/UOKZDPrIg==\\n-----END PUBLIC KEY-----\\n\",\n        \"ciphertext\": \"\",\n        \"nonce\": \"nonce-uuid\",\n        \"auth_tag\": \"\",\n        \"txn_id\": \"txn-uuid\",\n        \"iv\": \"\"\n    },\n    \"hop_count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/relays/packet",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"relays",
+								"packet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Direct Settlement Settle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"envelope\": {\n        \"ephemeral_public_key\": \"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9ZxPuGoekx6mkq8bg9so8CfQT6ac\\nBF6iyy2GtXi//X0UEid4pWgs0Pvsi0KUHgKnEcKbd1rI1Lg8/UOKZDPrIg==\\n-----END PUBLIC KEY-----\\n\",\n        \"ciphertext\": \"\",\n        \"nonce\": \"nonce-uuid\",\n        \"auth_tag\": \"\",\n        \"txn_id\": \"txn-uuid\",\n        \"iv\": \"\"\n    },\n    \"hop_count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/settlement/settle",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settlement",
+								"settle"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Accounts & Balances",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": \"user-charlie\",\n    \"initial_balance\": 25000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/accounts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Account Balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/accounts/user-alice/balance",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"user-alice",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dead Letter Queue (DLQ)",
+			"item": [
+				{
+					"name": "List DLQ Events (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/dlq?limit=10&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dlq"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Replay DLQ Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"event_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/dlq/replay",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dlq",
+								"replay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete DLQ Event",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/dlq/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dlq",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consensus Cluster Control",
+			"item": [
+				{
+					"name": "Get Cluster Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cluster/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cluster",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crash Node",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cluster/nodes/node-2/crash",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cluster",
+								"nodes",
+								"node-2",
+								"crash"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recover Node",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cluster/nodes/node-2/recover",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cluster",
+								"nodes",
+								"node-2",
+								"recover"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

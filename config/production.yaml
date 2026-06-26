@@ -1,0 +1,29 @@
+server:
+  port: "8080"
+  env: "production"
+
+database:
+  url: "postgres://postgres:postgres@db:5432/offlinepay?sslmode=disable"
+  max_open_conns: 50
+  max_idle_conns: 10
+  conn_max_lifetime: "15m"
+
+redis:
+  addr: "redis:6379"
+  password: ""
+
+observability:
+  tracing:
+    enabled: true
+    collector_url: "jaeger:4317"
+    service_name: "offlinepay-settlement-service"
+  metrics:
+    port: "9090"
+
+security:
+  bank_private_key: ""
+  bank_public_key: ""
+  rate_limits:
+    anonymous: 10
+    authenticated: 50
+    internal: 500

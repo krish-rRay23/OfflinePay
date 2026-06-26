@@ -1,0 +1,21 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# Testing
+*.test
+*.out
+*.log
+
+# Workspace / IDEs
+.idea/
+.vscode/
+go.work
+go.work.sum
+
+# Temporary / Scratch
+scratch/

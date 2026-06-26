@@ -1,0 +1,29 @@
+server:
+  port: "8081"
+  env: "testing"
+
+database:
+  url: "postgres://postgres:root@localhost:5432/offlinepay_test?sslmode=disable"
+  max_open_conns: 10
+  max_idle_conns: 2
+  conn_max_lifetime: "1m"
+
+redis:
+  addr: "localhost:6379"
+  password: ""
+
+observability:
+  tracing:
+    enabled: false
+    collector_url: "localhost:4317"
+    service_name: "offlinepay-test"
+  metrics:
+    port: "9091"
+
+security:
+  bank_private_key: ""
+  bank_public_key: ""
+  rate_limits:
+    anonymous: 1000
+    authenticated: 10000
+    internal: 100000

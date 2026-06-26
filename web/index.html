@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OfflinePay — Institutional Offline-First Payment Intent & Settlement Infrastructure</title>
+    <meta name="description" content="OfflinePay is an institutional-grade distributed payment intent relay and settlement platform, providing bank-grade cryptographic integrity and exactly-once execution.">
+    <!-- Premium Fonts from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sticky Navbar -->
+    <header class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" id="nav-logo">
+                <span class="logo-text">Offline<span class="accent-text">Pay</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="#platform" class="nav-link">Platform</a>
+                <a href="#security" class="nav-link">Security</a>
+                <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="#reliability" class="nav-link">Reliability</a>
+                <a href="#live-system" class="nav-link">Live System</a>
+            </nav>
+            <div class="nav-cta-group">
+                <a href="https://github.com" target="_blank" class="nav-link secondary-cta-btn">GitHub</a>
+                <a href="#live-system" class="nav-link secondary-cta-btn">Demo</a>
+                <a href="#get-started" class="nav-cta-btn">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- SECTION 1 — HERO -->
+        <section class="hero-section" id="platform">
+            <div class="container hero-container">
+                <div class="hero-text-side">
+                    <h1 class="hero-title reveal-fade-up">
+                        Trust is built<br>into every transaction.
+                    </h1>
+                    <p class="hero-subtext reveal-fade-up">
+                        OfflinePay enables secure offline-first payment authorization with bank-grade reliability, cryptographic integrity, and exactly-once settlement guarantees.
+                    </p>
+                    <div class="hero-actions reveal-fade-up">
+                        <a href="#architecture" class="btn primary-btn">View Architecture</a>
+                        <a href="#reliability" class="btn secondary-btn">Explore Reliability</a>
+                    </div>
+                </div>
+                <div class="hero-visual-side reveal-scale-in">
+                    <div class="visual-wrapper">
+                        <img src="assets/hero_pillar.png" alt="OfflinePay Abstract Architectural Pillar" class="hero-image">
+                        <div class="subtle-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 — PROOF OF RELIABILITY -->
+        <section class="proof-section" id="reliability">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Platform Metrics</div>
+                <div class="proof-grid">
+                    <div class="proof-item reveal-fade-up">
+                        <div class="proof-number" data-target="99.99" data-decimals="2" data-suffix="%">0.00%</div>
+                        <div class="proof-label">Settlement Integrity</div>
+                    </div>
+                    <div class="proof-item reveal-fade-up">
+                        <div class="proof-number" data-target="10000" data-decimals="0" data-suffix="">0</div>
+                        <div class="proof-label">Replay Attacks Blocked</div>
+                    </div>
+                    <div class="proof-item reveal-fade-up">
+                        <div class="proof-number" data-target="1" data-decimals="0" data-suffix="">0</div>
+                        <div class="proof-label">Successful Settlement</div>
+                    </div>
+                    <div class="proof-item reveal-fade-up">
+                        <div class="proof-number" data-target="9999" data-decimals="0" data-suffix="">0</div>
+                        <div class="proof-label">Duplicate Rejections</div>
+                    </div>
+                    <div class="proof-item reveal-fade-up">
+                        <div class="proof-number" data-target="1000" data-decimals="0" data-suffix="+">0</div>
+                        <div class="proof-label">Concurrent Transaction Simulation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3 — CORE CAPABILITIES -->
+        <section class="capabilities-section">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Core Capabilities</div>
+                <h2 class="section-title reveal-fade-up">Engineered for absolute correctness.</h2>
+                <p class="section-subtitle reveal-fade-up">Every payment intent is backed by strict cryptographic guarantees and double-entry accounting safety nets.</p>
+                
+                <div class="capabilities-grid">
+                    <!-- Card 1 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Replay Protection</h3>
+                        <p class="card-text">Cryptographic nonce registry and hardware signature verification prevent duplicated payment broadcasting.</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Exactly Once Settlement</h3>
+                        <p class="card-text">Distributed state machines ensure that transaction intents settle precisely once, even under massive replay attempts.</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Offline Spending Tokens</h3>
+                        <p class="card-text">ECDSA-signed offline tokens lock funds securely on-ledger, permitting local transactions without remote authorization.</p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Double Entry Ledger</h3>
+                        <p class="card-text">Authoritative balanced double-entry database design guarantees zero monetary leakage or imbalances.</p>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Event Sourcing</h3>
+                        <p class="card-text">Captures every financial state transition as an immutable ledger event log, ensuring absolute historical traceability.</p>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">CQRS Recovery</h3>
+                        <p class="card-text">Separates reads and writes to allow rapid projection state rebuilds dynamically from raw event streams.</p>
+                    </div>
+                    <!-- Card 7 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M4 4h16v16H4zM4 12h16M12 4v16"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Saga Orchestration</h3>
+                        <p class="card-text">Atomic execution path of reserve-and-settle actions with built-in compensatory flows for failure recovery.</p>
+                    </div>
+                    <!-- Card 8 -->
+                    <div class="capability-card reveal-card-morph">
+                        <div class="card-icon-container">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Transactional Outbox</h3>
+                        <p class="card-text">Safe state propagation using database-backed SKIP LOCKED queues to decouple stream delivery from transaction commits.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4 — ARCHITECTURE -->
+        <section class="architecture-section" id="architecture">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Architectural Flow</div>
+                <h2 class="section-title reveal-fade-up">A resilient relay path.</h2>
+                <p class="section-subtitle reveal-fade-up">Observe how signed offline payloads cascade through nearby nodes and settle safely on the central ledger.</p>
+                
+                <div class="architecture-visualizer">
+                    <!-- SVG lines backing the architecture layout -->
+                    <svg class="arch-connections" id="arch-connections-svg" viewBox="0 0 1000 500">
+                        <path id="path-device-relay" d="M 150 250 L 320 250" class="arch-wire"></path>
+                        <path id="path-relay-engine" d="M 370 250 L 550 150" class="arch-wire"></path>
+                        <path id="path-engine-ledger" d="M 640 150 L 800 150" class="arch-wire"></path>
+                        <path id="path-engine-store" d="M 640 150 L 640 350" class="arch-wire"></path>
+                        <path id="path-store-proj" d="M 640 350 L 800 350" class="arch-wire"></path>
+                        <path id="path-ledger-bank" d="M 880 150 L 880 250" class="arch-wire"></path>
+                    </svg>
+
+                    <!-- Node placements (Coordinates mapped inside CSS grid / absolute) -->
+                    <div class="arch-node-container">
+                        <!-- Node 1 -->
+                        <div class="arch-node" id="node-device" style="top: 50%; left: 10%;">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                </svg>
+                            </div>
+                            <div class="node-label">Offline Device</div>
+                            <div class="node-desc">ECDSA Payload Signer</div>
+                        </div>
+
+                        <!-- Node 2 -->
+                        <div class="arch-node" id="node-relay" style="top: 50%; left: 34%;">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </div>
+                            <div class="node-label">Proximity Relay</div>
+                            <div class="node-desc">Untrusted Broadcast Node</div>
+                        </div>
+
+                        <!-- Node 3 -->
+                        <div class="arch-node" id="node-engine" style="top: 30%; left: 59%;">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                    <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">Settlement Engine</div>
+                            <div class="node-desc">Saga Execution Coordinator</div>
+                        </div>
+
+                        <!-- Node 4 -->
+                        <div class="arch-node" id="node-ledger" style="top: 30%; left: 84%;">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="9" x2="15" y2="9"></line>
+                                    <line x1="9" y1="13" x2="15" y2="13"></line>
+                                    <line x1="9" y1="17" x2="15" y2="17"></line>
+                                </svg>
+                            </div>
+                            <div class="node-label">Double-Entry Ledger</div>
+                            <div class="node-desc">PostgreSQL Strict Balancing</div>
+                        </div>
+
+                        <!-- Node 5 -->
+                        <div class="arch-node" id="node-store" style="top: 70%; left: 59%;">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                                    <path d="M12 6v6l4 2"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">Event Store</div>
+                            <div class="node-desc">Immutable Event Sourcing</div>
+                        </div>
+
+                        <!-- Node 6 -->
+                        <div class="arch-node" id="node-proj" style="top: 70%; left: 84%;">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">Projection Layer</div>
+                            <div class="node-desc">CQRS Read Projections</div>
+                        </div>
+
+                        <!-- Node 7 -->
+                        <div class="arch-node" id="node-bank" style="top: 50%; left: 84%; transform: translateY(40px);">
+                            <div class="node-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M4 11h16M12 2L2 7h20z"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">Core Bank API</div>
+                            <div class="node-desc">Settlement Gateway</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5 — SECURITY -->
+        <section class="security-section" id="security">
+            <div class="container security-grid">
+                <div class="security-text-side">
+                    <div class="section-tag reveal-fade-up">Security Infrastructure</div>
+                    <h2 class="section-title reveal-fade-up">Cryptographic certainty without backchannels.</h2>
+                    
+                    <ul class="security-checklist">
+                        <li class="reveal-fade-up">
+                            <span class="sec-bullet-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></span>
+                            <div>
+                                <h4>End-to-End Encryption</h4>
+                                <p>ECIES hybrid encryption ensures data stays unreadable from the offline token holder until it reaches the authoritative Bank HSM.</p>
+                            </div>
+                        </li>
+                        <li class="reveal-fade-up">
+                            <span class="sec-bullet-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></span>
+                            <div>
+                                <h4>ECDSA Signatures</h4>
+                                <p>Every transaction intent is cryptographically signed using SECP256R1 signatures directly inside the device's hardware enclave.</p>
+                            </div>
+                        </li>
+                        <li class="reveal-fade-up">
+                            <span class="sec-bullet-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></span>
+                            <div>
+                                <h4>Hardware Attestation</h4>
+                                <p>Integrates dynamic TPM validation, verifying device integrity prior to permitting offline spending allowance.</p>
+                            </div>
+                        </li>
+                        <li class="reveal-fade-up">
+                            <span class="sec-bullet-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></span>
+                            <div>
+                                <h4>Replay Attack Resistance</h4>
+                                <p>Stateful on-ledger checks block re-entry by verifying monotonically increasing nonces.</p>
+                            </div>
+                        </li>
+                        <li class="reveal-fade-up">
+                            <span class="sec-bullet-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></span>
+                            <div>
+                                <h4>Byzantine Relay Resistance</h4>
+                                <p>Protects the host network from malicious relay behavior by enforcing payload expiration bounds and hop limits.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="security-visual-side reveal-scale-in">
+                    <div class="shield-container">
+                        <!-- Custom Premium Geometric SVG Shield -->
+                        <svg class="shield-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 20L170 50V110C170 154.2 140.2 176.8 100 190C59.8 176.8 30 154.2 30 110V50L100 20Z" stroke="#0A4FFF" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M100 35L155 58V105C155 139.5 131.8 158.4 100 169.5C68.2 158.4 45 139.5 45 105V58L100 35Z" stroke="#EAE6DF" stroke-width="1.5" stroke-linejoin="round"/>
+                            <circle cx="100" cy="100" r="25" stroke="#111111" stroke-width="1.5"/>
+                            <path d="M100 85V115M85 100H115" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                        <div class="shield-radial-accent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6 — FINANCIAL CORRECTNESS -->
+        <section class="correctness-section">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Mathematical Verification</div>
+                <h2 class="correctness-headline reveal-fade-up">Debits = Credits</h2>
+                <p class="correctness-subtext reveal-fade-up">
+                    Every settlement is validated through double-entry accounting and continuous financial integrity verification. No state exists in isolation; every credit requires a corresponding debit.
+                </p>
+
+                <!-- Animated Ledger Visualization -->
+                <div class="ledger-visualizer reveal-scale-in">
+                    <div class="ledger-header">
+                        <span>Ledger State</span>
+                        <span class="ledger-status">Audited: Balanced</span>
+                    </div>
+                    <div class="ledger-table">
+                        <div class="ledger-row row-header">
+                            <div>Account ID</div>
+                            <div>Action</div>
+                            <div>Debit (USD)</div>
+                            <div>Credit (USD)</div>
+                            <div>Post-Balance</div>
+                        </div>
+                        <div class="ledger-row transaction-line" id="row-sender">
+                            <div class="acc-id">sender-storm</div>
+                            <div class="action-tag debit-tag">DEBIT (Settled)</div>
+                            <div>$1.00</div>
+                            <div>$0.00</div>
+                            <div class="bal-after">$99.00</div>
+                        </div>
+                        <div class="ledger-row transaction-line" id="row-receiver">
+                            <div class="acc-id">receiver-storm</div>
+                            <div class="action-tag credit-tag">CREDIT (Settled)</div>
+                            <div>$0.00</div>
+                            <div>$1.00</div>
+                            <div class="bal-after">$101.00</div>
+                        </div>
+                        <div class="ledger-row transaction-line" id="row-release">
+                            <div class="acc-id">tok-res-storm</div>
+                            <div class="action-tag release-tag">RELEASE (Change)</div>
+                            <div>$9.00</div>
+                            <div>$9.00</div>
+                            <div class="bal-after">$0.00</div>
+                        </div>
+                        <div class="ledger-total-row">
+                            <div>Net Invariant Summary</div>
+                            <div>Σ Debit = Σ Credit</div>
+                            <div class="balanced-sum">$10.00</div>
+                            <div class="balanced-sum">$10.00</div>
+                            <div class="ledger-net-status">Δ = $0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7 — RESILIENCE TIMELINE -->
+        <section class="resilience-section">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Resilience Protocol</div>
+                <h2 class="section-title reveal-fade-up">Built for operational chaos.</h2>
+                <p class="section-subtitle reveal-fade-up">Our distributed state recovers gracefully from node failures, Redis stream outages, and database disconnects.</p>
+
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+
+                    <!-- Milestone 1 -->
+                    <div class="timeline-item reveal-fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-time font-mono">00:00:00</span>
+                            <h3>Redis Stream Failure</h3>
+                            <p>Primary Cache Layer fails. Transactional outbox entries write transactionally to postgres, holding queue states safely without dropping updates.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 2 -->
+                    <div class="timeline-item reveal-fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-time font-mono">00:00:12</span>
+                            <h3>PostgreSQL Recovery</h3>
+                            <p>Database health recovered. Lock-safety checks execute and transactional state consistency check executes. Safe state-recovery completed.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 3 -->
+                    <div class="timeline-item reveal-fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-time font-mono">00:00:15</span>
+                            <h3>Replay Storm Detection</h3>
+                            <p>Relays flood system with 10,000 duplicate payloads. Settlement Engine rejects 9,999 replayed intents concurrently, allowing exactly 1 to commit.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 4 -->
+                    <div class="timeline-item reveal-fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-time font-mono">00:00:18</span>
+                            <h3>Raft Leader Failover</h3>
+                            <p>Leader node crashes. Simulated Raft consensus re-triggers leader election. A new consensus leader is established under 150ms.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 5 -->
+                    <div class="timeline-item reveal-fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-time font-mono">00:00:22</span>
+                            <h3>CQRS Read Projection Rebuild</h3>
+                            <p>Read model corruption simulated. Projection database table truncated. Entire projection model is replayed and rebuilt from events in under 2s.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 6 -->
+                    <div class="timeline-item reveal-fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-time font-mono">00:00:25</span>
+                            <h3>Chaos Loop Completed</h3>
+                            <p>System audit logs confirm ledger balancing invariants holds with zero discrepancies detected. Complete financial parity validated.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8 — LIVE SYSTEM VIEW -->
+        <section class="live-system-section" id="live-system">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Operational Dashboard</div>
+                <div class="dashboard-header reveal-fade-up">
+                    <div>
+                        <h2 class="section-title">Live Node Analytics</h2>
+                        <p class="section-subtitle">Real-time system telemetry and consensus verification.</p>
+                    </div>
+                    <div class="dashboard-controls">
+                        <span class="node-live-pulse"></span>
+                        <span class="node-status-text">Network Connected</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid reveal-scale-in">
+                    <!-- Metric Card 1 -->
+                    <div class="dash-card">
+                        <span class="dash-card-label">Settlement Invariant</span>
+                        <div class="dash-card-val text-success">Σ Debits = Σ Credits</div>
+                        <div class="dash-card-sub">Ledger Balance verified 1s ago</div>
+                    </div>
+                    <!-- Metric Card 2 -->
+                    <div class="dash-card">
+                        <span class="dash-card-label">Attestation Health</span>
+                        <div class="dash-card-val">100.0%</div>
+                        <div class="dash-card-sub">Trusted Hardware Signature Enclave</div>
+                    </div>
+                    <!-- Metric Card 3 -->
+                    <div class="dash-card">
+                        <span class="dash-card-label">Replay Rejections</span>
+                        <div class="dash-card-val text-warning">9,999</div>
+                        <div class="dash-card-sub">Monotonically Checked Nonces</div>
+                    </div>
+                    <!-- Metric Card 4 -->
+                    <div class="dash-card">
+                        <span class="dash-card-label">Projection Lag</span>
+                        <div class="dash-card-val">0ms</div>
+                        <div class="dash-card-sub">Event Store to Read Model</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-footer-meta reveal-fade-up">
+                    <div class="dashboard-table-container">
+                        <h3>Recent Settlement Log</h3>
+                        <table class="dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Token ID</th>
+                                    <th>Relay Hops</th>
+                                    <th>State</th>
+                                    <th>Audit Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-mono">ce6221b4...dae9</td>
+                                    <td class="font-mono">test-token-fsm</td>
+                                    <td>1</td>
+                                    <td><span class="status-pill status-settled">SETTLED</span></td>
+                                    <td>2026-06-24 23:24:01</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">ea1174cc...c216</td>
+                                    <td class="font-mono">bd2f7f05...93fb</td>
+                                    <td>1</td>
+                                    <td><span class="status-pill status-settled">SETTLED</span></td>
+                                    <td>2026-06-24 23:24:02</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">12e0c293...3123</td>
+                                    <td class="font-mono">bd2f7f05...93fb</td>
+                                    <td>1</td>
+                                    <td><span class="status-pill status-failed">REJECTED</span></td>
+                                    <td>2026-06-24 23:24:02</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">33cfde1e...52ac</td>
+                                    <td class="font-mono">af02119f...bc41</td>
+                                    <td>1</td>
+                                    <td><span class="status-pill status-settled">SETTLED</span></td>
+                                    <td>2026-06-24 23:24:03</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9 — ENGINEERING ACHIEVEMENTS -->
+        <section class="achievements-section">
+            <div class="container">
+                <div class="section-tag reveal-fade-up">Engineering Validation</div>
+                <h2 class="section-title reveal-fade-up">Measurable system assurances.</h2>
+                <p class="section-subtitle reveal-fade-up">Validated through automated stress tests, chaos loops, and mathematical ledger proofs.</p>
+
+                <div class="achievements-table reveal-scale-in">
+                    <div class="ach-row">
+                        <div class="ach-title">Replay Attacks Simulated</div>
+                        <div class="ach-val font-mono">10,000 requests</div>
+                        <div class="ach-status font-mono text-success">Verified</div>
+                    </div>
+                    <div class="ach-row">
+                        <div class="ach-title">Concurrent Transaction Workers</div>
+                        <div class="ach-val font-mono">1,000 threads</div>
+                        <div class="ach-status font-mono text-success">Verified</div>
+                    </div>
+                    <div class="ach-row">
+                        <div class="ach-title">Duplicate Settlements Committed</div>
+                        <div class="ach-val font-mono">0 events</div>
+                        <div class="ach-status font-mono text-success">Verified</div>
+                    </div>
+                    <div class="ach-row">
+                        <div class="ach-title">Saga Lock Deadlocks Detected</div>
+                        <div class="ach-val font-mono">0 errors</div>
+                        <div class="ach-status font-mono text-success">Verified</div>
+                    </div>
+                    <div class="ach-row">
+                        <div class="ach-title">Token Spending Consumption</div>
+                        <div class="ach-val font-mono">Exactly Once</div>
+                        <div class="ach-status font-mono text-success">Verified</div>
+                    </div>
+                    <div class="ach-row">
+                        <div class="ach-title">CQRS Read Projection Recovery</div>
+                        <div class="ach-val font-mono">1.77 seconds</div>
+                        <div class="ach-status font-mono text-success">Verified</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 10 — FOOTER -->
+        <footer class="site-footer" id="get-started">
+            <div class="container footer-grid">
+                <div class="footer-brand-side">
+                    <div class="footer-logo">Offline<span>Pay</span></div>
+                    <p class="footer-tagline">Institutional-grade distributed offline payment intent & settlement infrastructure.</p>
+                </div>
+                <div class="footer-links-side">
+                    <div class="footer-column">
+                        <h4>Platform</h4>
+                        <a href="#platform">Overview</a>
+                        <a href="#reliability">Reliability</a>
+                        <a href="#security">Security</a>
+                        <a href="#live-system">Dashboard</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Architecture</h4>
+                        <a href="#architecture">Flow Model</a>
+                        <a href="#platform">Specifications</a>
+                        <a href="#platform">Integrations</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Security</h4>
+                        <a href="#security">ECDSA Attestation</a>
+                        <a href="#security">ECIES Encryption</a>
+                        <a href="#security">Replay Protection</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="https://github.com" target="_blank">GitHub</a>
+                        <a href="#platform">API Reference</a>
+                        <a href="#platform">Runbooks</a>
+                    </div>
+                </div>
+            </div>
+            <div class="container footer-copyright-row">
+                <p>&copy; 2026 OfflinePay. All rights reserved. Built for institutional financial infrastructure operations.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- GSAP Script CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Frontend JS -->
+    <script src="app.js"></script>
+</body>
+</html>

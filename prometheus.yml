@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'offlinepay-server'
+    static_configs:
+      - targets: ['offlinepay-server:8080'] # Since metrics are exposed on the primary server port or port 9090.
+        # Wait, in internal/observability/observability.go:
+        # func StartMetricsServer(port string) { ... }
+        # And in cmd/server/main.go:
+        # observability.StartMetricsServer("9090")
+        # However, in docker-compose.yml we exposed container port 9090 which conflicts with Prometheus's port 9090!
+        # Ah! That's a port conflict in container land! Let's check:
+        # Prometheus runs in a container and exposes host port 9090. If our server also runs metrics on container port 9090, both can run in their respective containers, but we cannot map both to host port 9090!
+        # In docker-compose.yml:
+        # prometheus container maps container port 9090 to host 9090.
+        # offlinepay-server container maps container port 8080 to host 8080, but does NOT map 9090 to the host.
+        # Inside the docker network, offlinepay-server is reachable at `offlinepay-server:9090` for metrics!
+        # And Prometheus container itself exposes UI on host 9090.
+        # This is fine inside Docker because they are different containers, but wait, having both containers listen on port 9090 inside the Docker network is completely fine, but to avoid any confusion, we can run metrics on a different port like `2112` or `9100`.
+        # In our server main we set: observability.StartMetricsServer("9090")
+        # In docker-compose we exposed: EXPOSE 9090.
+        # Let's target `offlinepay-server:9090` in prometheus.yml. That is correct!
+    metrics_path: '/metrics'
