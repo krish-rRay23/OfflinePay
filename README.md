@@ -17,8 +17,8 @@ sequenceDiagram
     actor Bob as Bob (Merchant)
     participant Relay as Untrusted Relay Node (Online)
     participant Bank as Settlement Authority (Online)
-    database Postgres as PostgreSQL Ledger
-    database Redis as Redis Nonce Cache
+    participant Postgres as PostgreSQL Ledger
+    participant Redis as Redis Nonce Cache
 
     Note over Alice, Bank: 1. Provisioning Stage (Online)
     Alice->>Bank: Request Offline Spending Power ($50)
