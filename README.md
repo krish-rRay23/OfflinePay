@@ -246,3 +246,29 @@ $env:REDIS_ADDR="localhost:6379"
 go run cmd/simulation/main.go
 ```
 Check the terminal logs to see detailed structured JSON reports demonstrating exactly-once token consumption and ledger balance audits.
+
+---
+
+## Bounded Failure Recovery
+
+OfflinePay now adds **autonomous recovery without autonomous financial authority**. The recovery path is deliberately separate from settlement:
+
+```mermaid
+flowchart LR
+  F[Failure event] --> C[Rules-first classifier]
+  C -->|ambiguous only| L[Optional LLM diagnosis]
+  C --> P[Deterministic policy]
+  L --> P
+  P --> W[Write-ahead recovery operation]
+  W --> O[Transactional outbox]
+  O --> R[Normal relay / settlement]
+  R --> S[Existing Saga + ledger + reconciliation]
+```
+
+* `FailureEvent` categories cover `NETWORK`, `PAYMENT`, `SECURITY`, `CONSISTENCY`, `INFRASTRUCTURE`, and `UNKNOWN`.
+* Rules classify recognizable failures. Optional LLM output is constrained to a category and confidence score; invalid output and confidence below `0.70` cause abstention/human review.
+* The deterministic policy alone selects `RETRY`, `COMPENSATE`, `ESCALATE`, `ABSTAIN`, or `EXHAUSTED`. It limits recovery to three attempts, 5,000,000 minor units (₹50,000 where INR is the configured minor unit), a 24-hour window, and exponential cooldowns.
+* `failure_events` and the unique `recovery_operations.idempotency_key` are committed before an outbox request. Concurrent workers use `FOR UPDATE SKIP LOCKED`, so one logical recovery action has one durable operation and one financial path.
+* Recovery never posts a transfer or mutates a balance. A retry goes through the existing settlement endpoint, so nonce replay protection, token consumption rules, risk checks, Saga transitions, double-entry ledger writes, and reconciliation cannot be bypassed.
+
+See [ADR-011](doc/adr/adr-011-bounded-recovery.md) for the safety boundary and operational rationale.
