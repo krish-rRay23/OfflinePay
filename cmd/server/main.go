@@ -24,6 +24,7 @@ import (
 	"offlinepay/internal/outbox"
 	"offlinepay/internal/projection"
 	"offlinepay/internal/reconciliation"
+	"offlinepay/internal/recovery"
 	"offlinepay/internal/relay"
 	"offlinepay/internal/repository"
 	"offlinepay/internal/risk"
@@ -145,6 +146,14 @@ func main() {
 	projectionWorker := projection.NewProjectionWorker(repo, eventBus)
 	observability.ActiveWorkers.WithLabelValues("projection").Set(1)
 	projectionWorker.Start(ctx)
+
+	recoveryWorker := recovery.NewWorker(settleSvc.RecoveryManager(), time.Second)
+	wg.Add(1)
+	observability.ActiveWorkers.WithLabelValues("recovery").Set(1)
+	go func() {
+		defer func() { observability.ActiveWorkers.WithLabelValues("recovery").Set(0); wg.Done() }()
+		recoveryWorker.Start(ctx)
+	}()
 
 	reconSvc := reconciliation.NewService(repo, tokenSvc, 5*time.Second)
 	wg.Add(1)

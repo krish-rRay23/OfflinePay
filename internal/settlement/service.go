@@ -18,6 +18,7 @@ import (
 	"offlinepay/internal/eventsource"
 	"offlinepay/internal/intent"
 	"offlinepay/internal/observability"
+	"offlinepay/internal/recovery"
 	"offlinepay/internal/repository"
 	"offlinepay/internal/risk"
 	"offlinepay/internal/saga"
@@ -30,6 +31,7 @@ type Service struct {
 	riskEngine       *risk.RiskEngine
 	sagaOrchestrator *saga.Orchestrator
 	eventSourceMgr   *eventsource.EventSourceManager
+	recoveryManager  *recovery.Manager
 }
 
 type staticReader struct{}
@@ -51,6 +53,11 @@ func NewService(repo *repository.Repository, bankKey *ecdsa.PrivateKey, riskEng 
 		bankKey = mockKey
 	}
 
+	recoveryManager, err := recovery.NewManager(repo, recovery.RulesFirstClassifier{}, recovery.DefaultPolicy())
+	if err != nil {
+		panic(fmt.Sprintf("invalid recovery policy: %v", err))
+	}
+
 	return &Service{
 		repo:             repo,
 		bankPrivateKey:   bankKey,
@@ -58,6 +65,7 @@ func NewService(repo *repository.Repository, bankKey *ecdsa.PrivateKey, riskEng 
 		riskEngine:       riskEng,
 		sagaOrchestrator: saga.NewOrchestrator(repo),
 		eventSourceMgr:   eventsource.NewEventSourceManager(repo, 5), // Snapshot every 5 events
+		recoveryManager:  recoveryManager,
 	}
 }
 
@@ -521,6 +529,13 @@ func (s *Service) Settle(ctx context.Context, env *domain.EncryptedEnvelope, hop
 		}
 
 		s.saveFailedIntent(ctx, env, failStatus, reason, hopCount)
+		// Recovery is recorded only after the failed aggregate exists. The policy can
+		// request a relay retry, but cannot bypass settlement or authorize a transfer.
+		if current, getErr := s.repo.GetPaymentIntent(ctx, env.TxnID); getErr == nil {
+			if _, recoveryErr := s.recoveryManager.RecordFailure(ctx, recovery.FailureEvent{TxnID: current.TxnID, Amount: current.Amount, Code: reason, Message: err.Error(), OccurredAt: time.Now()}); recoveryErr != nil {
+				slog.Error("failed to write recovery record", "txn_id", env.TxnID, "error", recoveryErr)
+			}
+		}
 		observability.SettlementsTotal.WithLabelValues("ATOMIC_SAGA_FAILED").Inc()
 		return failStatus, err
 	}
@@ -574,3 +589,7 @@ func (s *Service) saveFailedIntent(ctx context.Context, env *domain.EncryptedEnv
 	}
 	_ = s.eventSourceMgr.SaveEventAndSnapshot(ctx, nil, env.TxnID, "IntentFailed", 1, payloadES, intentModel)
 }
+
+// RecoveryManager exposes the bounded scheduler dependency; callers cannot obtain
+// a financial executor from it.
+func (s *Service) RecoveryManager() *recovery.Manager { return s.recoveryManager }
