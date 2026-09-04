@@ -115,17 +115,21 @@ func (m *Manager) RunOnce(ctx context.Context, limit int) error {
 			if err := rows.Scan(&id, &txnID, &action, &attempts); err != nil {
 				return err
 			}
-			attempts++
-			if attempts > m.policy.MaxAttempts {
-				if _, err := tx.ExecContext(ctx, `UPDATE recovery_operations SET state='EXHAUSTED', attempt_count=$1, updated_at=CURRENT_TIMESTAMP WHERE recovery_id=$2`, attempts, id); err != nil {
+			if attempts >= m.policy.MaxAttempts {
+				if _, err := tx.ExecContext(ctx, `UPDATE recovery_operations SET state='EXHAUSTED', next_attempt_at=NULL, updated_at=CURRENT_TIMESTAMP WHERE recovery_id=$1`, id); err != nil {
 					return err
 				}
 				continue
 			}
+			attempts++
 			payload, _ := json.Marshal(map[string]any{"recovery_id": id, "txn_id": txnID, "action": action, "attempt": attempts, "idempotency_key": IdempotencyKey(txnID, action)})
 			eventType := "RecoveryRetryRequested"
 			terminal := "SCHEDULED"
 			next := m.policy.NextAttempt(attempts+1, m.now())
+			if attempts == m.policy.MaxAttempts {
+				terminal = "EXHAUSTED"
+				next = time.Time{}
+			}
 			if action == ActionCompensate {
 				eventType = "RecoveryCompensationReviewRequested"
 				terminal = "ESCALATED"

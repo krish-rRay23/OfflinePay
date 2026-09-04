@@ -49,12 +49,15 @@ func TestRecoveryTerminalStatesCannotTransition(t *testing.T) {
 		}
 	}
 }
-func TestRecoveryIdempotencyKeyIsStableAndScoped(t *testing.T) {
+func TestRecoveryIdempotencyKeyIsStablePerTransaction(t *testing.T) {
 	if IdempotencyKey("txn-1", ActionRetry) != IdempotencyKey("txn-1", ActionRetry) {
 		t.Fatal("key is not stable")
 	}
-	if IdempotencyKey("txn-1", ActionRetry) == IdempotencyKey("txn-1", ActionCompensate) {
-		t.Fatal("action collision")
+	if IdempotencyKey("txn-1", ActionRetry) != IdempotencyKey("txn-1", ActionCompensate) {
+		t.Fatal("one transaction must have one recovery operation")
+	}
+	if IdempotencyKey("txn-1", ActionRetry) == IdempotencyKey("txn-2", ActionRetry) {
+		t.Fatal("transaction collision")
 	}
 }
 func BenchmarkPolicyDecision(b *testing.B) {

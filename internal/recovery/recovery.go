@@ -102,6 +102,6 @@ func (p Policy) Validate() error {
 	}
 	return nil
 }
-func IdempotencyKey(txnID string, action Action) string {
-	return fmt.Sprintf("recovery:%s:%s", txnID, action)
+func IdempotencyKey(txnID string, _ Action) string {
+	return fmt.Sprintf("recovery:%s", txnID)
 }
