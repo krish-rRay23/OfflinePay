@@ -102,17 +102,10 @@ func (eb *EventBus) Subscribe(ctx context.Context, stream string, group string, 
 
 				for _, streamData := range streams {
 					for _, message := range streamData.Messages {
-						eventID, _ := message.Values["event_id"].(string)
-						evType, ok1 := message.Values["type"].(string)
-						payload, ok2 := message.Values["payload"].(string)
-
-						if ok1 && ok2 {
-							if err := handler(eventID, evType, payload); err != nil {
-								slog.Error("failed to handle stream message", "message_id", message.ID, "error", err)
-							}
+						if !shouldAcknowledgeMessage(message, handler) {
+							continue
 						}
 
-						// Acknowledge processing
 						err = eb.client.XAck(ctx, stream, group, message.ID).Err()
 						if err != nil {
 							slog.Error("failed to ACK stream message", "message_id", message.ID, "error", err)
@@ -122,4 +115,38 @@ func (eb *EventBus) Subscribe(ctx context.Context, stream string, group string, 
 			}
 		}
 	}()
+}
+
+func shouldAcknowledgeMessage(message redis.XMessage, handler func(eventID string, eventType string, payload string) error) bool {
+	eventID, _ := readMessageValue(message, "event_id")
+	evType, okType := readMessageValue(message, "type")
+	payload, okPayload := readMessageValue(message, "payload")
+
+	if !okType || !okPayload {
+		slog.Error("invalid stream message payload", "message_id", message.ID, "values", message.Values)
+		return false
+	}
+
+	if err := handler(eventID, evType, payload); err != nil {
+		slog.Error("failed to handle stream message", "message_id", message.ID, "error", err)
+		return false
+	}
+
+	return true
+}
+
+func readMessageValue(message redis.XMessage, key string) (string, bool) {
+	rawValue, ok := message.Values[key]
+	if !ok || rawValue == nil {
+		return "", false
+	}
+
+	switch value := rawValue.(type) {
+	case string:
+		return value, true
+	case []byte:
+		return string(value), true
+	default:
+		return fmt.Sprint(value), true
+	}
 }
