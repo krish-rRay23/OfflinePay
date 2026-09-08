@@ -96,4 +96,3 @@ func TestShouldAcknowledgeMessage(t *testing.T) {
 		})
 	}
 }
-
