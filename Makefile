@@ -6,8 +6,9 @@ SIMULATION_BIN=$(BINARY_DIR)/offlinepay-simulation
 REBUILD_BIN=$(BINARY_DIR)/offlinepay-rebuild
 REPLAYSTORM_BIN=$(BINARY_DIR)/offlinepay-replaystorm
 SEED_BIN=$(BINARY_DIR)/offlinepay-seed
+BENCHMARK_BIN=$(BINARY_DIR)/offlinepay-benchmark
 
-.PHONY: all build test benchmark fuzz replaystorm rebuild lint docker seed migrate bootstrap clean dev
+.PHONY: all build test benchmark bench-impact fuzz replaystorm rebuild lint docker seed migrate bootstrap clean dev
 
 all: build test
 
@@ -19,6 +20,7 @@ build: clean
 	go build -o $(REBUILD_BIN) cmd/rebuild/main.go
 	go build -o $(REPLAYSTORM_BIN) cmd/replaystorm/main.go
 	go build -o $(SEED_BIN) cmd/seed/main.go
+	go build -o $(BENCHMARK_BIN) cmd/benchmark/main.go
 
 dev:
 	@echo "Starting local OfflinePay server..."
@@ -31,6 +33,10 @@ test:
 benchmark:
 	@echo "Executing micro-benchmarks..."
 	go test -v -run=^$$ -bench=. ./internal/...
+
+bench-impact:
+	@echo "Running industry impact benchmark suite..."
+	go run cmd/benchmark/main.go
 
 fuzz:
 	@echo "Executing fuzz tests..."
@@ -72,4 +78,5 @@ bootstrap: build seed test
 clean:
 	@echo "Cleaning up build artifacts..."
 	rm -rf $(BINARY_DIR)
-	rm -f server.exe simulation.exe rebuild.exe replaystorm.exe
+	rm -f server.exe simulation.exe rebuild.exe replaystorm.exe benchmark.exe
+

@@ -19,7 +19,7 @@ import (
 )
 
 type Service struct {
-	repo          *repository.Repository
+	repo           *repository.Repository
 	bankPrivateKey *ecdsa.PrivateKey
 }
 

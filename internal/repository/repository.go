@@ -1142,4 +1142,3 @@ func (r *Repository) GetPendingOutboxEventsCount(ctx context.Context) (int, erro
 	err := r.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM outbox_events WHERE status = 'PENDING'").Scan(&count)
 	return count, err
 }
-

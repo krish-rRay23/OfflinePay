@@ -148,7 +148,7 @@ func (re *RiskEngine) Assess(
 
 				timeDiffHours := float64(time.Now().Unix()-lastLoc.Time) / 3600.0
 				if timeDiffHours > 0 {
-					speed := distance / timeDiffHours // km/h
+					speed := distance / timeDiffHours      // km/h
 					if speed > 800.0 && distance > 100.0 { // Faster than commercial aircraft -> drift flag
 						score += 0.35
 						reason = "location drift: physically impossible travel velocity"

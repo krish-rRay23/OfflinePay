@@ -126,14 +126,14 @@ func (w *OutboxWorker) processSingleEvent(ctx context.Context, ev *domain.Outbox
 		if errScan := row.Scan(&status, &retryCount); errScan == nil {
 			if status == "FAILED" {
 				slog.ErrorContext(ctx, "outbox event exceeded retry limits, routing to dead letter queue (DLQ)", "event_id", ev.EventID, "retries", retryCount)
-				
+
 				dlqEvent := &domain.DeadLetterEvent{
 					Payload:       ev.Payload,
 					FailureReason: fmt.Sprintf("failed after %d retries: %s", retryCount, err.Error()),
 					RetryCount:    retryCount,
 					Timestamp:     time.Now(),
 				}
-				
+
 				errDLQ := w.repo.CreateDeadLetterEvent(ctx, tx, dlqEvent)
 				if errDLQ != nil {
 					return fmt.Errorf("failed to write DLQ event: %w", errDLQ)

@@ -36,10 +36,10 @@ func BenchmarkSettlement(b *testing.B) {
 	deviceKey, _ := crypto.GenerateKeyPair()
 	devicePubPEM, _ := crypto.ExportPublicKeyToPEM(&deviceKey.PublicKey)
 	deviceID := "bench-device"
-	
+
 	// Clean previous device if exists
 	_, _ = database.ExecContext(ctx, "DELETE FROM devices WHERE device_id = $1", deviceID)
-	
+
 	err = repo.CreateDevice(ctx, &domain.Device{
 		DeviceID:   deviceID,
 		OwnerID:    "bench-sender",

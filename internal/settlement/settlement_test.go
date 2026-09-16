@@ -25,7 +25,7 @@ func setupTestDB(t *testing.T) (*db.DB, func()) {
 	if dbURL == "" {
 		dbURL = "postgres://postgres:root@localhost:5432/offlinepay_test?sslmode=disable"
 	}
-	
+
 	// Open connection to postgres to check if it's running.
 	// If it fails, try the default docker compose db URL or check if we can run it.
 	// In local testing environments without postgres, we skip the test rather than failing.
@@ -297,7 +297,7 @@ func TestSettle_InvalidSignature(t *testing.T) {
 	deviceID := "device"
 	_ = repo.CreateAccount(ctx, senderID, 10000)
 	_ = repo.CreateAccount(ctx, receiverID, 0)
-	
+
 	// Create a device with WRONG public key
 	otherKey, _ := crypto.GenerateKeyPair()
 	wrongPubPEM, _ := crypto.ExportPublicKeyToPEM(&otherKey.PublicKey)

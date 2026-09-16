@@ -48,9 +48,9 @@ func main() {
 		available int64
 		reserved  int64
 	}{
-		{"user-alice", 5000, 5000}, // $50 available, $50 reserved for offline token
-		{"user-bob", 10000, 0},     // $100 available
-		{"merchant-charlie", 0, 0}, // merchant starting fresh
+		{"user-alice", 5000, 5000},  // $50 available, $50 reserved for offline token
+		{"user-bob", 10000, 0},      // $100 available
+		{"merchant-charlie", 0, 0},  // merchant starting fresh
 		{"sender-storm", 100000, 0}, // used for high concurrency simulations
 		{"receiver-storm", 0, 0},
 	}
@@ -120,7 +120,7 @@ func main() {
 	}
 
 	tokenID := "token-alice-50"
-	tokenValue := int64(5000) // $50
+	tokenValue := int64(5000)                           // $50
 	tokenExpiry := time.Now().Add(365 * 24 * time.Hour) // 1 year expiry
 
 	tokenData := fmt.Sprintf("token:%s:owner:%s:value:%d:expiry:%d", tokenID, "user-alice", tokenValue, tokenExpiry.Unix())

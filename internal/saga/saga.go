@@ -60,7 +60,7 @@ func (o *Orchestrator) Execute(ctx context.Context, txnID string, steps []SagaSt
 
 	for _, step := range steps {
 		slog.Info("executing saga step", "saga_id", sagaID, "step", step.Name)
-		
+
 		// Update Saga step tracking
 		_ = o.repo.UpdateSagaState(ctx, nil, sagaID, domain.SagaStatusStarted, step.Name)
 

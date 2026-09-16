@@ -86,9 +86,9 @@ func (s *Service) forwardWithRetry(ctx context.Context, env *domain.EncryptedEnv
 	maxBackoff := 5 * time.Second
 
 	for attempt := 1; attempt <= s.retryLimit; attempt++ {
-		slog.Info("relay forwarding attempt starting", 
-			"relay_id", s.relayID, 
-			"txn_id", env.TxnID, 
+		slog.Info("relay forwarding attempt starting",
+			"relay_id", s.relayID,
+			"txn_id", env.TxnID,
 			"attempt", attempt,
 		)
 
@@ -103,9 +103,9 @@ func (s *Service) forwardWithRetry(ctx context.Context, env *domain.EncryptedEnv
 
 		settlementStatus, err := s.client.Settle(ctx, env, hopCount)
 		if err == nil {
-			slog.Info("relay forwarded successfully and received ACK", 
-				"relay_id", s.relayID, 
-				"txn_id", env.TxnID, 
+			slog.Info("relay forwarded successfully and received ACK",
+				"relay_id", s.relayID,
+				"txn_id", env.TxnID,
 				"settlement_status", settlementStatus,
 			)
 			dbAttempt.Status = "ACK_" + settlementStatus
@@ -114,10 +114,10 @@ func (s *Service) forwardWithRetry(ctx context.Context, env *domain.EncryptedEnv
 			return
 		}
 
-		slog.Warn("relay forward attempt failed", 
-			"relay_id", s.relayID, 
-			"txn_id", env.TxnID, 
-			"attempt", attempt, 
+		slog.Warn("relay forward attempt failed",
+			"relay_id", s.relayID,
+			"txn_id", env.TxnID,
+			"attempt", attempt,
 			"error", err,
 		)
 

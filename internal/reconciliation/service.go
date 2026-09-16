@@ -72,7 +72,7 @@ func (s *Service) runScan(ctx context.Context) {
 				"status", intent.Status,
 				"age_seconds", time.Since(intent.UpdatedAt).Seconds(),
 			)
-			
+
 			if time.Now().After(intent.Expiry) {
 				slog.InfoContext(intentCtx, "reconciliation auto-failing stuck expired transaction")
 				reason := "expired_during_relay"

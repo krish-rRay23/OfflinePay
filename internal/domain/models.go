@@ -6,19 +6,19 @@ import (
 
 // Payment State Machine States
 const (
-	StateCreated     = "CREATED"
-	StateSigned      = "SIGNED"
-	StateEncrypted   = "ENCRYPTED"
-	StateBroadcast   = "BROADCAST"
-	StateRelayed     = "RELAYED"
-	StateValidated   = "VALIDATED"
-	StateReserved    = "RESERVED"
-	StateSettled     = "SETTLED"
-	StateRejected    = "REJECTED"
-	StateFailed      = "FAILED"
-	StateExpired     = "EXPIRED"
-	StateDuplicate   = "DUPLICATE"
-	StateReconciled  = "RECONCILED"
+	StateCreated    = "CREATED"
+	StateSigned     = "SIGNED"
+	StateEncrypted  = "ENCRYPTED"
+	StateBroadcast  = "BROADCAST"
+	StateRelayed    = "RELAYED"
+	StateValidated  = "VALIDATED"
+	StateReserved   = "RESERVED"
+	StateSettled    = "SETTLED"
+	StateRejected   = "REJECTED"
+	StateFailed     = "FAILED"
+	StateExpired    = "EXPIRED"
+	StateDuplicate  = "DUPLICATE"
+	StateReconciled = "RECONCILED"
 )
 
 // Device Status
@@ -54,17 +54,17 @@ type Device struct {
 
 // Offline token model
 type OfflineToken struct {
-	TokenID           string     `json:"token_id"`
-	OwnerID           string     `json:"owner_id"`
-	Value             int64      `json:"value"` // in cents / minor unit
-	Expiry            time.Time  `json:"expiry"`
-	Consumed          bool       `json:"consumed"`
-	ConsumedAt        *time.Time `json:"consumed_at,omitempty"`
-	TokenSignature    string     `json:"token_signature"`
-	ReservedAt        time.Time  `json:"reserved_at"`
-	ReleasedAt        *time.Time `json:"released_at,omitempty"`
-	RiskScoreAtIssue  float64    `json:"risk_score_at_issue"`
-	Status            string     `json:"status"` // ISSUED, HELD, CONSUMED, INVALIDATED
+	TokenID          string     `json:"token_id"`
+	OwnerID          string     `json:"owner_id"`
+	Value            int64      `json:"value"` // in cents / minor unit
+	Expiry           time.Time  `json:"expiry"`
+	Consumed         bool       `json:"consumed"`
+	ConsumedAt       *time.Time `json:"consumed_at,omitempty"`
+	TokenSignature   string     `json:"token_signature"`
+	ReservedAt       time.Time  `json:"reserved_at"`
+	ReleasedAt       *time.Time `json:"released_at,omitempty"`
+	RiskScoreAtIssue float64    `json:"risk_score_at_issue"`
+	Status           string     `json:"status"` // ISSUED, HELD, CONSUMED, INVALIDATED
 }
 
 // Payment intent raw payload (what gets signed and encrypted)
@@ -175,18 +175,18 @@ func IsValidTransition(oldState, newState string) bool {
 	}
 
 	transitions := map[string][]string{
-		StateCreated:   {StateSigned},
-		StateSigned:    {StateEncrypted, StateFailed},
-		StateEncrypted: {StateBroadcast, StateFailed},
-		StateBroadcast: {StateRelayed, StateExpired, StateFailed},
-		StateRelayed:   {StateValidated, StateRejected, StateDuplicate, StateExpired, StateFailed},
-		StateValidated: {StateReserved, StateRejected, StateFailed},
-		StateReserved:  {StateSettled, StateFailed},
-		StateSettled:   {StateReconciled},
-		StateRejected:  {StateReconciled},
-		StateFailed:    {StateReconciled},
-		StateExpired:   {StateReconciled},
-		StateDuplicate: {StateReconciled},
+		StateCreated:    {StateSigned},
+		StateSigned:     {StateEncrypted, StateFailed},
+		StateEncrypted:  {StateBroadcast, StateFailed},
+		StateBroadcast:  {StateRelayed, StateExpired, StateFailed},
+		StateRelayed:    {StateValidated, StateRejected, StateDuplicate, StateExpired, StateFailed},
+		StateValidated:  {StateReserved, StateRejected, StateFailed},
+		StateReserved:   {StateSettled, StateFailed},
+		StateSettled:    {StateReconciled},
+		StateRejected:   {StateReconciled},
+		StateFailed:     {StateReconciled},
+		StateExpired:    {StateReconciled},
+		StateDuplicate:  {StateReconciled},
 		StateReconciled: {},
 	}
 
@@ -299,4 +299,3 @@ func IsValidTokenTransition(oldState, newState string) bool {
 	}
 	return false
 }
-

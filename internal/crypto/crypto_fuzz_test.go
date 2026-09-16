@@ -11,7 +11,7 @@ func FuzzParsePEMToPublicKey(f *testing.F) {
 	// Add seed corpus
 	f.Add("invalid pem data")
 	f.Add("-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9ZxPuGoekx6mkq8bg9so8CfQT6ac\nBF6iyy2GtXi//X0UEid4pWgs0Pvsi0KUHgKnEcKbd1rI1Lg8/UOKZDPrIg==\n-----END PUBLIC KEY-----\n")
-	
+
 	f.Fuzz(func(t *testing.T, data string) {
 		// ParsePEMToPublicKey should return an error or a valid key, but must never panic
 		_, _ = ParsePEMToPublicKey(data)

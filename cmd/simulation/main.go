@@ -181,7 +181,7 @@ func main() {
 	aliceAcc := "acc-alice"
 	bobAcc := "acc-bob"
 	_ = repo.CreateAccount(ctx, aliceAcc, 1000000) // $10,000.00
-	_ = repo.CreateAccount(ctx, bobAcc, 20000)      // $200.00
+	_ = repo.CreateAccount(ctx, bobAcc, 20000)     // $200.00
 
 	// Register Device
 	devicePriv, _ := crypto.GenerateKeyPair()
@@ -217,7 +217,7 @@ func main() {
 	// SCENARIO 1: Happy Path Offline Settlement
 	// ----------------------------------------------------
 	slog.Info("--- SCENARIO 1: Happy Path Payment Intent ---")
-	
+
 	// Alice requests an offline spending token of $50
 	tok, err := tokenSvc.IssueToken(ctx, aliceAcc, 5000, 1*time.Hour)
 	if err != nil {
@@ -275,7 +275,7 @@ func main() {
 	slog.Info("--- SCENARIO 3: Token Double-Spend Protection ---")
 	// Issue a new token
 	tokDouble, _ := tokenSvc.IssueToken(ctx, aliceAcc, 10000, 1*time.Hour)
-	
+
 	// Create two different payments using the SAME token
 	env1, _, _ := intentSvc.CreateSignedAndEncryptedEnvelope(aliceAcc, bobAcc, 4000, "USD", aliceDeviceID, tokDouble.TokenID, devicePriv, &bankPriv.PublicKey, 10*time.Minute)
 	env2, _, _ := intentSvc.CreateSignedAndEncryptedEnvelope(aliceAcc, bobAcc, 4500, "USD", aliceDeviceID, tokDouble.TokenID, devicePriv, &bankPriv.PublicKey, 10*time.Minute)
@@ -338,7 +338,7 @@ func main() {
 	// ----------------------------------------------------
 	slog.Info("--- SCENARIO 5: Fraud Signature Check ---")
 	tokFraud, _ := tokenSvc.IssueToken(ctx, aliceAcc, 10000, 1*time.Hour)
-	
+
 	// Create intent using WRONG private key
 	attackerPriv, _ := crypto.GenerateKeyPair()
 	envFraud, _, _ := intentSvc.CreateSignedAndEncryptedEnvelope(aliceAcc, bobAcc, 5000, "USD", aliceDeviceID, tokFraud.TokenID, attackerPriv, &bankPriv.PublicKey, 10*time.Minute)
@@ -412,25 +412,25 @@ func main() {
 	behaviors := []string{"spam", "delayed", "lazy", "byzantine"}
 	for _, behavior := range behaviors {
 		slog.Info("Testing Byzantine relay behavior", "type", behavior)
-		
+
 		envRelay, _, _ := intentSvc.CreateSignedAndEncryptedEnvelope(
 			aliceAcc, bobAcc, 2000, "USD", aliceDeviceID, tokRelay.TokenID, devicePriv, &bankPriv.PublicKey, 10*time.Minute,
 		)
-		
+
 		byzClient := &ByzantineRelayClient{
 			client:   directClient,
 			behavior: behavior,
 		}
-		
+
 		relayNode := relay.NewService(repo, byzClient, fmt.Sprintf("byz-relay-%s", behavior), 3)
-		
+
 		err := relayNode.ReceiveAndRelay(ctx, envRelay, 1)
 		if err != nil {
 			slog.Warn("Byzantine relay packet rejected by entry check", "type", behavior, "error", err)
 		} else {
 			slog.Info("Byzantine relay packet accepted for delivery", "type", behavior)
 		}
-		
+
 		time.Sleep(300 * time.Millisecond)
 	}
 
@@ -447,30 +447,30 @@ func main() {
 	// 1. Inject Postgres outage
 	slog.Info("Simulating PostgreSQL outage...")
 	chaosCtrl.SetPostgresOffline(true)
-	
+
 	_, err = settleSvc.Settle(ctx, envChaos, 1)
 	if err != nil {
 		slog.Info("Scenario 9 PASS: Transaction safely blocked when DB was offline", "error", err)
 	} else {
 		slog.Error("Scenario 9 FAIL: Transaction succeeded even though DB was offline!")
 	}
-	
+
 	chaosCtrl.SetPostgresOffline(false)
 	slog.Info("PostgreSQL recovered.")
-	
+
 	// 2. Inject Redis outage (transaction outbox holds it)
 	slog.Info("Simulating Redis outage...")
 	chaosCtrl.SetRedisOffline(true)
-	
+
 	statusChaos, err := settleSvc.Settle(ctx, envChaos, 1)
 	if err != nil {
 		slog.Error("Scenario 9 FAIL: Settlement failed even though DB was online", "error", err)
 	} else {
 		slog.Info("Scenario 9 PASS: Settlement succeeded with Redis offline (recorded in outbox)", "status", statusChaos)
 	}
-	
+
 	time.Sleep(500 * time.Millisecond)
-	
+
 	chaosCtrl.SetRedisOffline(false)
 	slog.Info("Redis recovered.")
 	time.Sleep(1 * time.Second)
@@ -480,26 +480,26 @@ func main() {
 	// ----------------------------------------------------
 	slog.Info("--- SCENARIO 10: Raft Consensus Cluster Simulation ---")
 	clusterSim := cluster.NewCluster()
-	
+
 	err = clusterSim.ProposeCommand(ctx, "SETTLE_TXN_alice_bob_1000")
 	if err != nil {
 		slog.Error("Raft proposal failed", "error", err)
 	} else {
 		slog.Info("Raft proposal committed successfully on quorum")
 	}
-	
+
 	slog.Info("Crashing current leader...", "leader", clusterSim.LeaderID)
 	clusterSim.CrashNode(clusterSim.LeaderID)
-	
+
 	err = clusterSim.ProposeCommand(ctx, "SETTLE_TXN_alice_bob_2000")
 	if err != nil {
 		slog.Info("Raft proposal failed as expected during leader outage", "error", err)
 	} else {
 		slog.Error("Raft proposal succeeded during leader outage!")
 	}
-	
+
 	time.Sleep(200 * time.Millisecond) // wait for leader election
-	
+
 	err = clusterSim.ProposeCommand(ctx, "SETTLE_TXN_alice_bob_3000")
 	if err != nil {
 		slog.Error("Raft proposal failed after election", "error", err)

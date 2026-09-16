@@ -93,7 +93,7 @@ func LoadConfig() *Config {
 	}
 
 	cfg := &Config{}
-	
+
 	// Locate config file
 	configPath := findConfigFile(env)
 	if configPath != "" {
@@ -109,7 +109,7 @@ func LoadConfig() *Config {
 				cfg.Database.URL = raw.Database.URL
 				cfg.Database.MaxOpenConns = raw.Database.MaxOpenConns
 				cfg.Database.MaxIdleConns = raw.Database.MaxIdleConns
-				
+
 				dur, errDur := time.ParseDuration(raw.Database.ConnMaxLifetime)
 				if errDur == nil {
 					cfg.Database.ConnMaxLifetime = dur
@@ -185,7 +185,7 @@ func LoadConfig() *Config {
 
 func findConfigFile(env string) string {
 	fileName := fmt.Sprintf("%s.yaml", env)
-	
+
 	// Traversal list to walk up directories to find "config" folder
 	dirsToTry := []string{
 		"config",

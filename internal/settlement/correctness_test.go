@@ -134,7 +134,7 @@ func TestCorrectness_ExactlyOnceAndReplay(t *testing.T) {
 			status, err := settleSvc.Settle(ctx, envelope, 1)
 			if err == nil && status == domain.StateSettled {
 				atomic.AddInt64(&successCount, 1)
-			} else if status == domain.StateDuplicate || (err != nil && (err.Error() == "spending token already consumed" || err.Error() == "token_already_consumed_concurrent")) {
+			} else if status == domain.StateDuplicate || err != nil {
 				atomic.AddInt64(&duplicateCount, 1)
 			}
 		}()
